@@ -15,6 +15,10 @@
             overflow: hidden;
             background: #000;
             font-family: 'Roboto', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
         }
 
         canvas {
@@ -34,6 +38,10 @@
             z-index: 100;
             /* Ensure it stays above the canvas */
             user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            pointer-events: auto;
+            touch-action: auto;
         }
 
         #credit-link:hover {
