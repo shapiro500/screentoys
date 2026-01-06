@@ -225,7 +225,7 @@ async function setup() {
     videoLayer.addChild(videoSprite);
 
     // --- INSTRUCTION TEXT ---
-    const desktopMsg = "Click and drag to drop some cars";
+    const desktopMsg = "Click and drag (or type) to drop some cars";
     const mobileMsg = "Tap and drag to drop some cars";
     instructionText = new PIXI.Text(isMobile ? mobileMsg : desktopMsg, {
         fontFamily: 'Roboto',
