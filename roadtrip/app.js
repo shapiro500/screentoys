@@ -10,7 +10,7 @@ const ASSET_FOLDER = `assets/${DEVICE_TYPE}/`;
 const VIDEO_SRC = 'assets/landscape_loop.mp4';
 
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 800;
-const ENABLE_FILTERS = !isMobile;
+const ENABLE_FILTERS = false;
 
 const COW_COUNT = 15;
 const TARGET_FPS = 30;
