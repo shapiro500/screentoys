@@ -9,6 +9,9 @@ const DEVICE_TYPE = 'desktop';
 const ASSET_FOLDER = `assets/${DEVICE_TYPE}/`;
 const VIDEO_SRC = 'assets/landscape_loop.mp4';
 
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 800;
+const ENABLE_FILTERS = !isMobile;
+
 const COW_COUNT = 15;
 const TARGET_FPS = 30;
 const BASE_COW_SCALE = 1.0;
@@ -40,7 +43,7 @@ const SHAKE_SETTINGS = {
     triggerFrame: 9,      // Frame index 9 (10th frame)
     duration: 5,          // Shake length in frames
     xIntensity: 2,
-    yIntensity: 5,
+    yIntensity: isMobile ? 2.5 : 5,
     rotationIntensity: 0.1 * (Math.PI / 180),
     zoomIntensity: 0.015, // Scale multiplier to hide edges during rotation
     minDistanceMultiplier: 0.25 // Farthest cars get this fraction of the shake
@@ -104,7 +107,7 @@ const keyMap = {
     ' ': { x: 0.5, y: 1.0 }
 };
 
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 800;
+
 let instructionText = null;
 let carSpawned = false;
 let windowOverlay = null;
@@ -226,7 +229,7 @@ async function setup() {
     const mobileMsg = "Tap and drag to drop some cars";
     instructionText = new PIXI.Text(isMobile ? mobileMsg : desktopMsg, {
         fontFamily: 'Roboto',
-        fontSize: 24,
+        fontSize: isMobile ? 18 : 24,
         fill: 0x000000,
         fontWeight: '300',
         align: 'center'
@@ -252,6 +255,7 @@ async function setup() {
     const cars = [];
 
     function applyPerspectiveEffects(container, t, vx) {
+        if (!ENABLE_FILTERS) return;
         const currentDepthBlur = SETTINGS.minDepthBlur + t * (SETTINGS.maxDepthBlur - SETTINGS.minDepthBlur);
         const currentMotionBlur = Math.abs(vx) * SETTINGS.motionBlurStrength;
         const sprite = container.getChildAt(0);
@@ -269,9 +273,11 @@ async function setup() {
         const cow = new PIXI.AnimatedSprite(animFrames);
         cow.anchor.set(0.5, 0.75);
         cow.stop();
-        const blurFilter = new PIXI.filters.BlurFilter();
-        cow.filters = [blurFilter];
-        cow.blurRef = blurFilter;
+        if (ENABLE_FILTERS) {
+            const blurFilter = new PIXI.filters.BlurFilter();
+            cow.filters = [blurFilter];
+            cow.blurRef = blurFilter;
+        }
         cowContainer.addChild(cow);
         spriteLayer.addChild(cowContainer);
         cows.push(cowContainer);
@@ -365,6 +371,39 @@ async function setup() {
         if (SHOW_DEBUG_BOUNDS) {
             drawDebugBox(container, HITBOXES.cow.w, HITBOXES.cow.t, HITBOXES.cow.b, 0xFF0000);
         }
+
+        spriteLayer.children.sort((a, b) => a.y - b.y);
+    }
+
+    // --- CAR POOLING ---
+    const carPool = [];
+    function getCarContainer() {
+        if (carPool.length > 0) {
+            return carPool.pop();
+        }
+        const carContainer = new PIXI.Container();
+        const car = new PIXI.AnimatedSprite([PIXI.Texture.EMPTY]);
+        car.anchor.set(0.5, 0.93);
+        car.loop = false;
+        if (ENABLE_FILTERS) {
+            const blurFilter = new PIXI.filters.BlurFilter();
+            car.filters = [blurFilter];
+            car.blurRef = blurFilter;
+        }
+        carContainer.addChild(car);
+        carContainer.anim = car;
+
+        if (SHOW_DEBUG_BOUNDS) {
+            const debugObj = new PIXI.Graphics();
+            carContainer.addChild(debugObj);
+            carContainer.debug = debugObj;
+        }
+        return carContainer;
+    }
+
+    function returnCarContainer(carCont) {
+        spriteLayer.removeChild(carCont);
+        carPool.push(carCont);
     }
 
     // --- CAR LOGIC ---
@@ -374,20 +413,20 @@ async function setup() {
         let spawnX = worldX + Math.cos(angle) * dist;
         let spawnY = worldY + Math.sin(angle) * dist;
 
-        // --- FIX: Clamp Y BEFORE collision detection ---
         spawnY = Math.max(SETTINGS.topY, Math.min(SETTINGS.bottomY, spawnY));
 
-        // Candidate car scale (calculated after clamp)
         const candidateT = (spawnY - SETTINGS.topY) / (SETTINGS.bottomY - SETTINGS.topY || 1);
         const candidateScale = (0.2 + candidateT * 0.8) * BASE_CAR_SCALE;
 
-        // --- COW AVOIDANCE LOGIC (Box-to-Box) ---
         let foundValidSpot = false;
+        const NEARBY_X = 600;
 
-        // Phase 1: Try pushing away from cows near the intended target
-        for (let attempt = 0; attempt < 20; attempt++) {
+        // Phase 1: Try pushing away from cows near the intended target (Shortened)
+        for (let attempt = 0; attempt < 10; attempt++) {
             let collisionFound = false;
             for (const cow of cows) {
+                if (Math.abs(spawnX - cow.x) > NEARBY_X) continue;
+
                 const cowScale = Math.abs(cow.scale.y);
                 const carW = HITBOXES.car.w * candidateScale;
                 const carT = HITBOXES.car.t * candidateScale;
@@ -414,9 +453,9 @@ async function setup() {
             }
         }
 
-        // Phase 2: FALLBACK - If target area is too crowded, hunt for ANY random free spot
+        // Phase 2: FALLBACK (Shortened)
         if (!foundValidSpot) {
-            for (let attempt = 0; attempt < 50; attempt++) {
+            for (let attempt = 0; attempt < 20; attempt++) {
                 const testX = Math.random() * VIDEO_NATIVE_WIDTH;
                 const testY = SETTINGS.topY + Math.random() * (SETTINGS.bottomY - SETTINGS.topY);
                 const testT = (testY - SETTINGS.topY) / (SETTINGS.bottomY - SETTINGS.topY || 1);
@@ -424,6 +463,7 @@ async function setup() {
 
                 let overlap = false;
                 for (const cow of cows) {
+                    if (Math.abs(testX - cow.x) > NEARBY_X) continue;
                     const cowScale = Math.abs(cow.scale.y);
                     const carW = HITBOXES.car.w * testScale;
                     const carT = HITBOXES.car.t * testScale;
@@ -447,22 +487,16 @@ async function setup() {
             }
         }
 
-        // Final Safety: If NO spot was found on the entire field, skip this spawn
-        if (!foundValidSpot) return;
+        // Ensure we didn't push it or fallback to an offscreen spot
+        if (!foundValidSpot || spawnX < -200 || spawnX > VIDEO_NATIVE_WIDTH + 200) return;
 
         const randomSheet = carSheets[Math.floor(Math.random() * carSheets.length)];
         const carAnimFrames = randomSheet.animations["drive"] || Object.values(randomSheet.textures);
 
-        const carContainer = new PIXI.Container();
-        const car = new PIXI.AnimatedSprite(carAnimFrames);
-        car.anchor.set(0.5, 0.93);
-        car.loop = false;
-        car.stop();
-
-        const blurFilter = new PIXI.filters.BlurFilter();
-        car.filters = [blurFilter];
-        car.blurRef = blurFilter;
-        carContainer.addChild(car);
+        const carContainer = getCarContainer();
+        const car = carContainer.anim;
+        car.textures = carAnimFrames;
+        car.gotoAndStop(0);
 
         const t = (spawnY - SETTINGS.topY) / (SETTINGS.bottomY - SETTINGS.topY || 1);
         const finalScale = (0.2 + t * 0.8) * BASE_CAR_SCALE;
@@ -477,16 +511,11 @@ async function setup() {
 
         spriteLayer.addChild(carContainer);
         cars.push(carContainer);
-        carContainer.anim = car;
         carContainer.isFinished = false;
         carContainer.shakeTriggered = false;
-        // Pre-calculate shake intensity based on depth (t)
         carContainer.shakeMult = SHAKE_SETTINGS.minDistanceMultiplier + (t * (1.0 - SHAKE_SETTINGS.minDistanceMultiplier));
 
         if (SHOW_DEBUG_BOUNDS) {
-            const debugObj = new PIXI.Graphics();
-            carContainer.addChild(debugObj);
-            carContainer.debug = debugObj;
             drawDebugBox(carContainer, HITBOXES.car.w, HITBOXES.car.t, HITBOXES.car.b, 0x0000FF);
         }
 
@@ -751,13 +780,13 @@ async function setup() {
                     }
                 }
 
-                if (carCont.x < -1000 || carCont.x > VIDEO_NATIVE_WIDTH + 1000) {
-                    spriteLayer.removeChild(carCont);
+                if (carCont.x < -600 || carCont.x > VIDEO_NATIVE_WIDTH + 600) {
+                    returnCarContainer(carCont);
                     cars.splice(i, 1);
                 }
             }
 
-            spriteLayer.children.sort((a, b) => a.y - b.y);
+            // spriteLayer.children.sort((a, b) => a.y - b.y); // REMOVED: Only sort on add/reset
 
             // Handle Instruction Text Fade
             if (carSpawned && instructionText && instructionText.alpha > 0) {
