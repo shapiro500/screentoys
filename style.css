@@ -30,10 +30,12 @@ body {
 .header {
     text-align: center;
     margin-bottom: 80px;
+    width: 100%;
 }
 
 .intro-copy {
     font-size: var(--intro-size);
+    white-space: nowrap;
     font-weight: 300;
     margin-bottom: 10px;
     opacity: 0.8;
@@ -102,9 +104,36 @@ body {
 @media (max-width: 900px) {
     :root {
         --grid-columns: 1;
-        --logo-size: 72px;
+        --logo-size: 84px;
         --intro-size: 18px;
     }
+
+    .toy-item.is-desktop-only .video-container video,
+    .toy-item.is-desktop-only .toy-info {
+        opacity: 0.4;
+    }
+
+    .toy-item.is-desktop-only .desktop-only-warning {
+        display: block;
+    }
+}
+
+.desktop-only-warning {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    text-align: center;
+    color: #ff3333;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .flamingo-container {

@@ -43,7 +43,7 @@ const SHAKE_SETTINGS = {
     triggerFrame: 9,      // Frame index 9 (10th frame)
     duration: 5,          // Shake length in frames
     xIntensity: 2,
-    yIntensity: isMobile ? 2.5 : 5,
+    yIntensity: isMobile ? 2 : 5,
     rotationIntensity: 0.1 * (Math.PI / 180),
     zoomIntensity: 0.015, // Scale multiplier to hide edges during rotation
     minDistanceMultiplier: 0.25 // Farthest cars get this fraction of the shake
@@ -53,10 +53,10 @@ const SHAKE_SETTINGS = {
 const AMBIENT_SHAKE_SETTINGS = {
     overlayMult: 2.0,
     wiggle: {
-        freq: 2,     // Hz (cycles per second)
-        x: 1,        // Max X displacement
-        y: 3,        // Max Y displacement
-        rot: 0.0     // Max rotation in degrees
+        freq: 2,                   // Hz (cycles per second)
+        x: 1,                      // Max X displacement
+        y: isMobile ? 1.5 : 3,     // Max Y displacement
+        rot: 0.0                   // Max rotation in degrees
     },
     vibration: {
         freq: 3,    // Hz
@@ -238,7 +238,7 @@ async function setup() {
     app.stage.addChild(instructionText);
 
     const updateInstructionPos = () => {
-        instructionText.x = window.innerWidth * 0.35;
+        instructionText.x = window.innerWidth * (isMobile ? 0.45 : 0.35);
         instructionText.y = window.innerHeight * 0.28;
     };
     updateInstructionPos();
