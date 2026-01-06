@@ -1,0 +1,138 @@
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-color: #ffffff;
+    --font-main: 'Roboto', sans-serif;
+    --grid-columns: 2;
+    /* Easy to adjust */
+    --gap: 40px;
+    --logo-size: 150px;
+    --intro-size: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    padding: 80px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.intro-copy {
+    font-size: var(--intro-size);
+    font-weight: 300;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.logo {
+    font-size: var(--logo-size);
+    font-weight: 100;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.toy-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns), 1fr);
+    gap: var(--gap);
+    max-width: 1000px;
+    width: 100%;
+}
+
+.toy-item {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toy-item:hover {
+    transform: translateY(-8px);
+}
+
+.video-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #111;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.toy-info {
+    padding: 5px 0;
+}
+
+.toy-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.toy-description {
+    font-size: 16px;
+    font-weight: 300;
+    opacity: 0.6;
+    line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+    :root {
+        --grid-columns: 1;
+        --logo-size: 72px;
+        --intro-size: 18px;
+    }
+}
+
+.flamingo-container {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.flamingo-squad {
+    height: auto;
+}
+
+.footer {
+    margin-top: 10px;
+    padding: 0 0 40px 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}

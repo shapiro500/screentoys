@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road trip</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #credit-link {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            color: #a59b62;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            z-index: 100;
+            /* Ensure it stays above the canvas */
+            user-select: none;
+        }
+
+        #credit-link:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="https://www.instagram.com/shapiro500/" target="_blank" id="credit-link">shapiro500</a>
+    <script src="vendor/pixi.min.js"></script>
+    <script src="vendor/pixi-sound.js"></script>
+    <script src="vendor/lil-gui.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
