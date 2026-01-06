@@ -133,7 +133,7 @@ function init() {
                     <source src="${toy.videoSrc}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                ${toy.desktopOnly ? '<div class="desktop-only-warning">WARNING: Doesn\'t really work on a phone</div>' : ''}
+                ${toy.desktopOnly ? '<div class="desktop-only-warning">WARNING:<br>Doesn\'t really work on a phone</div>' : ''}
             </div>
             <div class="toy-info">
                 <h3 class="toy-title">${toy.title}</h3>
