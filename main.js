@@ -8,13 +8,11 @@ const introsPart1 = [
     "hello again.",
     "well hello.",
     "oh. hi.",
-    "thanks for stopping by.",
     "look who it is.",
     "hi there.",
     "welcome back.",
     "good to have you.",
     "ah. yes. hi.",
-    "thanks for your interest.",
     "hey now."
 ];
 
@@ -48,7 +46,7 @@ const toys = [
         title: "Road trip",
         description: "Send torrents of cars smashing down into a field of cows. Don't worry, you can't hit the cows.",
         videoSrc: "assets/roadtrip.mp4",
-        url: "/roadtrip/index.html"
+        url: "/roadtrip/"
     },
     {
         title: "Poms",
@@ -65,7 +63,7 @@ const toys = [
     },
     {
         title: "shapiro500",
-        description: "In-browser VJ tool for displaying dozens of playful 3D animated loops. Change the tempo, sync to music.",
+        description: "Need some background visuals for a party? This VJ tool displays dozens of playful 3D animations forever. Change the tempo, sync to music.",
         videoSrc: "assets/shapiro500.mp4",
         url: "https://shapiro500.com",
         desktopOnly: true
