@@ -25,7 +25,7 @@
             display: block;
         }
 
-        #credit-link {
+        .credit-link-container {
             position: absolute;
             bottom: 15px;
             left: 15px;
@@ -33,10 +33,16 @@
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
             font-weight: 700;
-            text-decoration: none;
-            transition: color 0.2s ease;
             z-index: 100;
-            /* Ensure it stays above the canvas */
+            /* Pill Styling */
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            /* Interaction */
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
@@ -44,14 +50,28 @@
             touch-action: auto;
         }
 
-        #credit-link:hover {
+        .credit-link-container a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .credit-link-container a:hover {
             color: #ffffff;
+        }
+
+        .credit-link-container .separator {
+            opacity: 0.5;
         }
     </style>
 </head>
 
 <body>
-    <a href="https://www.instagram.com/shapiro500/" target="_blank" id="credit-link">shapiro500</a>
+    <div class="credit-link-container">
+        <a href="https://www.instagram.com/shapiro500/" target="_blank">shapiro500</a>
+        <span class="separator">·</span>
+        <a href="https://screen.toys" target="_blank">more screen toys</a>
+    </div>
     <script src="vendor/pixi.min.js"></script>
     <script src="vendor/pixi-sound.js"></script>
     <script src="vendor/lil-gui.js"></script>
