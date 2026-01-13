@@ -368,11 +368,12 @@ async function init() {
                 startKingWave(this, 'capture');
 
                 // Reset the board for the captured side after 1 second
+                const capturedColor = this.color;
                 setTimeout(() => {
                     if (PIXI.sound.exists('gameStart')) {
                         PIXI.sound.play('gameStart');
                     }
-                    setupInitialBoard(this.color);
+                    setupInitialBoard(capturedColor);
                 }, 1000);
             } else if (!isWave) {
                 PIXI.sound.play('capture');
