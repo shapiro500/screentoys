@@ -43,6 +43,12 @@ const introsPart2 = [
 
 const toys = [
     {
+        title: "Chess 2",
+        description: "At last, Chess can finally be played the way we've always wanted: by haphazardly chucking a bunch of pieces at each other.",
+        videoSrc: "assets/chess2.mp4",
+        url: "/chess2/"
+    },
+    {
         title: "Road trip",
         description: "Send torrents of cars smashing down into a field of cows. Don't worry, you can't hit the cows.",
         videoSrc: "assets/roadtrip.mp4",
