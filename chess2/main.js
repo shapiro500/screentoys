@@ -43,6 +43,14 @@ const INITIAL_SPAWN_DELAY = 0; // Ticks before board setup starts (1/6th second 
 const app = new PIXI.Application();
 
 async function init() {
+    if (navigator.audioSession) {
+        try {
+            navigator.audioSession.type = 'playback';
+        } catch (e) {
+            console.error('Error setting audio session type:', e);
+        }
+    }
+
     await app.init({
         resizeTo: window,
         backgroundColor: 0x000000,
@@ -105,7 +113,7 @@ async function init() {
         { name: 'check', src: 'assets/sounds/move-check.mp3' },
         { name: 'moveSelf', src: 'assets/sounds/move-self.mp3' },
         { name: 'moveOpponent', src: 'assets/sounds/move-opponent.mp3' },
-        { name: 'bg', src: 'assets/sounds/bg.mp3' }
+        { name: 'gameStart', src: 'assets/sounds/game-start.mp3' }
     ];
 
     const totalAssets = assetManifest.length + soundFiles.length;
@@ -153,13 +161,27 @@ async function init() {
     loadingContainer.visible = false;
     loadingContainer.destroy({ children: true });
 
-    // Start background music
-    if (PIXI.sound.exists('bg')) {
-        PIXI.sound.play('bg', {
-            loop: true,
-            volume: 0.5
-        });
-    }
+    // Background music will be started via HTML5 Audio on user interaction
+    let bgAudio = null;
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            if (PIXI.sound.context && PIXI.sound.context.audioContext && PIXI.sound.context.audioContext.state === 'suspended') {
+                PIXI.sound.context.audioContext.resume();
+            }
+            // Only resume if the user has already tapped to start
+            if (bgAudio && bgAudio.paused && !isWaitingForFirstTap) {
+                bgAudio.play().catch(() => { });
+            }
+        } else {
+            if (bgAudio) {
+                bgAudio.pause();
+            }
+            if (PIXI.sound.context && PIXI.sound.context.audioContext && PIXI.sound.context.audioContext.state === 'running') {
+                PIXI.sound.context.audioContext.suspend();
+            }
+        }
+    });
 
 
     const worldContainer = new PIXI.Container();
@@ -588,11 +610,25 @@ async function init() {
 
     app.canvas.addEventListener('pointerdown', (e) => {
         // Start background music if it was blocked by autoplay
-        if (PIXI.sound.exists('bg') && !PIXI.sound.find('bg').isPlaying) {
-            PIXI.sound.play('bg', { loop: true, volume: 0.5 });
+        // Initialize and start background music as HTML5 audio if not already started
+        if (!bgAudio) {
+            bgAudio = new Audio('assets/sounds/bg.mp3');
+            bgAudio.loop = true;
+            bgAudio.volume = 0.5;
+            bgAudio.play().catch(err => console.error("Error playing BG music:", err));
+        }
+
+        // Ensure PIXI Sound's AudioContext is resumed
+        if (PIXI.sound.context && PIXI.sound.context.audioContext && PIXI.sound.context.audioContext.state === 'suspended') {
+            PIXI.sound.context.audioContext.resume();
         }
 
         if (isWaitingForFirstTap) {
+            // Play game-start sound using PIXI Sound
+            if (PIXI.sound.exists('gameStart')) {
+                PIXI.sound.play('gameStart');
+            }
+
             isWaitingForFirstTap = false;
             isLogoFading = true;
             logoFadeStartTime = Date.now();
