@@ -366,6 +366,14 @@ async function init() {
             if (this.type === 'king' && !isWave) {
                 PIXI.sound.play('gameEnd');
                 startKingWave(this, 'capture');
+
+                // Reset the board for the captured side after 1 second
+                setTimeout(() => {
+                    if (PIXI.sound.exists('gameStart')) {
+                        PIXI.sound.play('gameStart');
+                    }
+                    setupInitialBoard(this.color);
+                }, 1000);
             } else if (!isWave) {
                 PIXI.sound.play('capture');
             }
@@ -738,8 +746,9 @@ async function init() {
     updateStatsUI();
 
     const setupQueue = [];
-    function setupInitialBoard() {
+    function setupInitialBoard(colorFilter = null) {
         const backRank = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
+        const newPieces = [];
 
         function getBoardPos(file, rank) {
             const u = (file + 0.5) / 8;
@@ -754,21 +763,27 @@ async function init() {
         }
 
         // Black pieces (Ranks 0 and 1)
-        for (let f = 0; f < 8; f++) {
-            setupQueue.push({ pos: getBoardPos(f, 0), color: 'black', type: backRank[f] });
-            setupQueue.push({ pos: getBoardPos(f, 1), color: 'black', type: 'pawn' });
+        if (!colorFilter || colorFilter === 'black') {
+            for (let f = 0; f < 8; f++) {
+                newPieces.push({ pos: getBoardPos(f, 0), color: 'black', type: backRank[f] });
+                newPieces.push({ pos: getBoardPos(f, 1), color: 'black', type: 'pawn' });
+            }
         }
         // White pieces (Ranks 6 and 7)
-        for (let f = 0; f < 8; f++) {
-            setupQueue.push({ pos: getBoardPos(f, 6), color: 'white', type: 'pawn' });
-            setupQueue.push({ pos: getBoardPos(f, 7), color: 'white', type: backRank[f] });
+        if (!colorFilter || colorFilter === 'white') {
+            for (let f = 0; f < 8; f++) {
+                newPieces.push({ pos: getBoardPos(f, 6), color: 'white', type: 'pawn' });
+                newPieces.push({ pos: getBoardPos(f, 7), color: 'white', type: backRank[f] });
+            }
         }
 
-        // Shuffle the queue for random spawn order
-        for (let i = setupQueue.length - 1; i > 0; i--) {
+        // Shuffle the new pieces locally before adding to setupQueue
+        for (let i = newPieces.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [setupQueue[i], setupQueue[j]] = [setupQueue[j], setupQueue[i]];
+            [newPieces[i], newPieces[j]] = [newPieces[j], newPieces[i]];
         }
+
+        setupQueue.push(...newPieces);
     }
 
     setupInitialBoard();
