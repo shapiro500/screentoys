@@ -699,6 +699,14 @@ async function init() {
         const pieceOrder = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'];
         const colors = ['white', 'black'];
 
+        const container = document.getElementById('stats-container');
+        if (container) {
+            container.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                container.classList.toggle('hidden');
+            });
+        }
+
         colors.forEach(color => {
             const rowTarget = document.getElementById(`${color}-stats`);
             if (!rowTarget) return;
