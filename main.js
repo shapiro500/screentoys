@@ -43,6 +43,12 @@ const introsPart2 = [
 
 const toys = [
     {
+        title: "Splitshift",
+        description: "A really simple matching game that's probably too hard for you.",
+        videoSrc: "assets/splitshift.mp4",
+        url: "/splitshift/"
+    },
+    {
         title: "Chess 2",
         description: "At last, Chess can finally be played the way we've always wanted: by haphazardly chucking a bunch of pieces at each other.",
         videoSrc: "assets/chess2.mp4",
