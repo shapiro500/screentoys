@@ -44,7 +44,7 @@ const introsPart2 = [
 const toys = [
     {
         title: "Splitshift",
-        description: "A really simple matching game that's probably too hard for you.",
+        description: "A simple sliding tile puzzle that is definitely too hard for me.",
         videoSrc: "assets/splitshift.mp4",
         url: "/splitshift/"
     },
