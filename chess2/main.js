@@ -16,6 +16,7 @@ const SCALE_FACTOR = 0.0004; // How much pieces scale based on Y position
 const PERSPECTIVE_REFERENCE_Y = 1003 - 1024; // Central Y coordinate in board space (centered at -21 local)
 
 const PIECE_TYPES = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'];
+// Chess piece 3D models by Stanleyerland on Thingiverse https://www.thingiverse.com/thing:6054837
 
 const PIECE_HITBOX_CONFIG = {
     pawn: { w: 60, h: 50 },
