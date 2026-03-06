@@ -64,7 +64,7 @@ const toys = [
         title: "Poms",
         description: "Summon explosive pomeranians running at full speed by tapping or typing. Pairs nicely with heavy metal.",
         videoSrc: "assets/poms.mp4",
-        url: "https://poms.fun"
+        url: "/poms/"
     },
     {
         title: "Five Penguins",
