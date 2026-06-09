@@ -43,6 +43,12 @@ const introsPart2 = [
 
 const toys = [
     {
+        title: "Firewood Splitting Simulator",
+        description: "Come see what it's like to split wood in my yard on my actual stump with my actual axe.",
+        videoSrc: "assets/firewood.mp4",
+        url: "/firewood/"
+    },
+    {
         title: "Splitshift",
         description: "A simple sliding tile puzzle that is definitely too hard for me.",
         videoSrc: "assets/splitshift.mp4",
