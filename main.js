@@ -43,6 +43,12 @@ const introsPart2 = [
 
 const toys = [
     {
+        title: "Spooky Bones",
+        description: "A spooky skeleton dance extravaganza. Throw on some music and enjoy the bones.",
+        videoSrc: "assets/bones.mp4",
+        url: "/bones/"
+    },
+    {
         title: "Firewood Splitting Simulator",
         description: "Come see what it's like to split wood in my yard on my actual stump with my actual axe.",
         videoSrc: "assets/firewood.mp4",
