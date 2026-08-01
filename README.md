@@ -4,8 +4,8 @@
 
 [![Website](https://img.shields.io/badge/Web-screen.toys-8A2BE2?style=for-the-badge&logo=googlechrome&logoColor=white)](https://screen.toys)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-shapiro500%2Fscreentoys-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shapiro500/screentoys)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)]
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=for-the-badge)]
 
 ---
 
